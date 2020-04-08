@@ -1,13 +1,13 @@
 const express = require('express');
-// const connectDB = require('./config/db');
-// const path = require('path');
+
+const connectDB = require('../config/db');
+const path = require('path');
 
 const app = express();
-
-// app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // connect database
-// connectDB();
+connectDB();
 
 // Init middleware
 app.use(express.json({ extended: false }));
@@ -15,8 +15,8 @@ app.use(express.json({ extended: false }));
 app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes
-// app.use('/api/users', require('./routes/api/users'));
-// app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
 // app.use('/api/memories', require('./routes/api/memories'));
 
 const PORT = process.env.PORT || 5000;
