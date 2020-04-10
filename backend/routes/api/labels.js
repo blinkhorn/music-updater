@@ -7,12 +7,12 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 
-const Artist = require('../../models/Artist');
+const Label = require('../../models/Label');
 
 const getMorePages = (name, currentPage) => {
   return axios
     .get(
-      `https://api.discogs.com/database/search?artist=${name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
+      `https://api.discogs.com/database/search?label=${name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
     )
     .then((res) => res.data.results)
     .catch((err) => {
@@ -25,22 +25,19 @@ const getMorePages = (name, currentPage) => {
     });
 };
 
-const setArtistRelease = (user, artist, release) => {
+const setLabelRelease = (user, release) => {
   return {
     user,
-    artist,
     releaseId: release.id,
     resourceURL: release.resource_url,
     thumbnailURL: release.thumb,
     releaseTitle: release.title,
-    releaseLabel: release.label,
-    releaseType: release.type,
     releaseYear: release.year
   };
 };
 
-// @route    POST api/artists
-// @desc     Create an artist
+// @route    POST api/labels
+// @desc     Create an label
 // @access   Private
 router.post(
   '/',
@@ -54,19 +51,19 @@ router.post(
     try {
       let currentPage = 1;
 
-      const newArtist = new Artist({
+      const newLabel = new Label({
         user: req.user.id,
         name: req.body.name
       });
 
       await axios
         .get(
-          `https://api.discogs.com/database/search?artist=${req.body.name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
+          `https://api.discogs.com/database/search?label=${req.body.name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
         )
         .then(async (response) => {
           for (let release of response.data.results) {
-            newArtist.releases.unshift(
-              setArtistRelease(req.user.id, req.body.name, release)
+            newLabel.releases.unshift(
+              setLabelRelease(req.user.id, release)
             );
           }
           currentPage++; // increment before check if need to get more pages
@@ -75,8 +72,8 @@ router.post(
               req.body.name,
               currentPage
             )) {
-              newArtist.releases.unshift(
-                setArtistRelease(req.user.id, req.body.name, release)
+              newLabel.releases.unshift(
+                setLabelRelease(req.user.id, req.body.name, release)
               );
             }
             currentPage++;
@@ -91,9 +88,9 @@ router.post(
             );
         });
 
-      const artist = await newArtist.save();
+      const label = await newLabel.save();
 
-      res.json(artist);
+      res.json(label);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
@@ -101,126 +98,126 @@ router.post(
   }
 );
 
-// @route    GET api/artists
-// @desc     Get all artists for current user
+// @route    GET api/labels
+// @desc     Get all labels for current user
 // @access   Private
 router.get('/', auth, async (req, res) => {
   try {
-    const currentUserArtists = await Artist.find({ user: req.user.id }).sort({
+    const currentUserLabels = await Label.find({ user: req.user.id }).sort({
       date: -1
     });
-    res.json(currentUserArtists);
+    res.json(currentUserLabels);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
   }
 });
 
-// @route    GET api/artists/all
-// @desc     Get all artists for all users
+// @route    GET api/labels/all
+// @desc     Get all labels for all users
 // @access   Private
 router.get('/all', auth, async (req, res) => {
   try {
-    const artists = await Artist.find().sort({
+    const labels = await Label.find().sort({
       date: -1
     });
-    res.json(artists);
+    res.json(labels);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
   }
 });
 
-// @route    GET api/artists/:id
-// @desc     Get artist by ID
+// @route    GET api/labels/:id
+// @desc     Get label by ID
 // @access   Private
 router.get('/:id', auth, async (req, res) => {
   try {
-    const artist = await Artist.findById(req.params.id);
-    if (!artist) {
-      return res.status(404).json({ msg: 'Artist not found' });
+    const label = await Label.findById(req.params.id);
+    if (!label) {
+      return res.status(404).json({ msg: 'Label not found' });
     }
 
     // check user
-    if (artist.user.toString() !== req.user.id) {
+    if (label.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
-    res.json(artist);
+    res.json(label);
   } catch (error) {
     console.error(error.message);
     if (error.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'Artist not found' });
+      return res.status(404).json({ msg: 'Label not found' });
     }
     res.status(500).send('Server Error');
   }
 });
 
-// @route    DELETE api/artists/:id
-// @desc     Delete an artist
+// @route    DELETE api/labels/:id
+// @desc     Delete a label
 // @access   Private
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const artist = await Artist.findById(req.params.id);
+    const label = await Label.findById(req.params.id);
 
-    if (!artist) {
-      return res.status(404).json({ msg: 'Artist not found' });
+    if (!label) {
+      return res.status(404).json({ msg: 'Label not found' });
     }
 
     // check user
-    if (artist.user.toString() !== req.user.id) {
+    if (label.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
-    await artist.remove();
+    await label.remove();
 
-    res.json({ msg: 'Artist removed' });
+    res.json({ msg: 'Label removed' });
   } catch (error) {
     console.error(error.message);
     if (error.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'Artist not found' });
+      return res.status(404).json({ msg: 'Label not found' });
     }
     res.status(500).send('Server Error');
   }
 });
 
-// @route    PUT api/artists/releases/:id
-// @desc     Update an artist's releases
+// @route    PUT api/labels/releases/:id
+// @desc     Update a label's releases
 // @access   Private
 router.put('/releases/:id', auth, async (req, res) => {
   try {
-    const artist = await Artist.findById(req.params.id);
+    const label = await Label.findById(req.params.id);
 
-    if (!artist) {
-      return res.status(404).json({ msg: 'Artist not found' });
+    if (!label) {
+      return res.status(404).json({ msg: 'Label not found' });
     }
 
     // check user
-    if (artist.user.toString() !== req.user.id) {
+    if (label.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
-    const currentArtistReleases = [...artist.releases];
+    const currentLabelReleases = [...label.releases];
 
-    const updatedArtistReleases = [];
+    const updatedLabelReleases = [];
 
     let currentPage = 1;
 
     await axios
       .get(
-        `https://api.discogs.com/database/search?artist=${artist.name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
+        `https://api.discogs.com/database/search?label=${label.name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
       )
       .then(async (response) => {
         for (let release of response.data.results) {
-          updatedArtistReleases.unshift(
-            setArtistRelease(req.user.id, artist.name, release)
+          updatedLabelReleases.unshift(
+            setLabelRelease(req.user.id, label.name, release)
           );
         }
         currentPage++; // increment before check if need to get more pages
         while (currentPage <= response.data.pagination.pages) {
-          for (let release of await getMorePages(artist.name, currentPage)) {
-            updatedArtistReleases.unshift(
-              setArtistRelease(req.user.id, artist.name, release)
+          for (let release of await getMorePages(label.name, currentPage)) {
+            updatedLabelReleases.unshift(
+              setLabelRelease(req.user.id, label.name, release)
             );
           }
           currentPage++;
@@ -234,12 +231,12 @@ router.put('/releases/:id', auth, async (req, res) => {
             "Server Error | We're experiencing issues retrieving data from Discogs."
           );
       });
-    if (currentArtistReleases.length !== updatedArtistReleases.length) {
-      artist.releases = updatedArtistReleases;
-      await artist.save();
-      res.json({ msg: 'Artist releases updated' });
+    if (currentLabelReleases.length !== updatedLabelReleases.length) {
+      label.releases = updatedLabelReleases;
+      await label.save();
+      res.json({ msg: 'Label releases updated' });
     } else {
-      res.json({ msg: 'No new artist releases' });
+      res.json({ msg: 'No new label releases' });
     }
   } catch (err) {
     console.error(err.message);
@@ -247,21 +244,21 @@ router.put('/releases/:id', auth, async (req, res) => {
   }
 });
 
-// @route    DELETE api/artists/release/:id/:release_id
-// @desc     Delete Artist release
+// @route    DELETE api/labels/release/:id/:release_id
+// @desc     Delete Label release
 // @access   Private
 router.delete('/release/:id/:release_id', auth, async (req, res) => {
   try {
-      const artist = await Artist.findById(req.params.id);
+      const label = await Label.findById(req.params.id);
 
       // pull out release
-      const release = artist.releases.find(
+      const release = label.releases.find(
           release => release.id === req.params.release_id
       );
 
-      // make sure artist exists
-      if (!artist) {
-          return res.status(404).json({ msg: 'Artist does not exits' });
+      // make sure label exists
+      if (!label) {
+          return res.status(404).json({ msg: 'Label does not exits' });
       }
       // make sure release exists
       if (!release) {
@@ -273,15 +270,15 @@ router.delete('/release/:id/:release_id', auth, async (req, res) => {
       }
 
       // Get remove index
-      const removeIndex = artist.releases
+      const removeIndex = label.releases
           .map(release => release.id)
           .indexOf(req.params.release_id);
 
-      artist.releases.splice(removeIndex, 1);
+      label.releases.splice(removeIndex, 1);
 
-      await artist.save();
+      await label.save();
 
-      res.json(artist.releases);
+      res.json(label.releases);
   } catch (error) {
       console.error(error.message);
       res.status(500).send('Server Error');
