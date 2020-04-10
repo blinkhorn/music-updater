@@ -10,10 +10,6 @@ const LabelSchema = new Schema({
         type: String,
         required: true
     },
-    labelId: {
-        type: Number,
-        reuqired: true
-    },
     releases: [
         {
             user: {
