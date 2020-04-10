@@ -101,4 +101,150 @@ router.post(
   }
 );
 
+// @route    GET api/artists
+// @desc     Get all artists for current user
+// @access   Private
+router.get('/', auth, async (req, res) => {
+  try {
+    const currentUserArtists = await Artist.find({ user: req.user.id }).sort({
+      date: -1
+    });
+    res.json(currentUserArtists);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    GET api/artists/all
+// @desc     Get all artists for all users
+// @access   Private
+router.get('/all', auth, async (req, res) => {
+  try {
+    const artists = await Artist.find().sort({
+      date: -1
+    });
+    res.json(artists);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    GET api/artists/:id
+// @desc     Get artist by ID
+// @access   Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const artist = await Artist.findById(req.params.id);
+    if (!artist) {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+
+    // check user
+    if (artist.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    res.json(artist);
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    DELETE api/artists/:id
+// @desc     Delete an artist
+// @access   Private
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const artist = await Artist.findById(req.params.id);
+
+    if (!artist) {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+
+    // check user
+    if (artist.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    await artist.remove();
+
+    res.json({ msg: 'Artist removed' });
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    PUT api/artists/releases/:id
+// @desc     Update an artist's releases
+// @access   Private
+router.put('/releases/:id', auth, async (req, res) => {
+  try {
+    const artist = await Artist.findById(req.params.id);
+
+    if (!artist) {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+
+    // check user
+    if (artist.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    const currentArtistReleases = [...artist.releases];
+
+    const updatedArtistReleases = [];
+
+    let currentPage = 1;
+
+    await axios
+      .get(
+        `https://api.discogs.com/database/search?artist=${artist.name}&per_page=100&page=${currentPage}&key=${key}&secret=${secret}`
+      )
+      .then(async (response) => {
+        for (let release of response.data.results) {
+          updatedArtistReleases.unshift(
+            setArtistRelease(req.user.id, artist.name, release)
+          );
+        }
+        currentPage++; // increment before check if need to get more pages
+        while (currentPage <= response.data.pagination.pages) {
+          for (let release of await getMorePages(artist.name, currentPage)) {
+            updatedArtistReleases.unshift(
+              setArtistRelease(req.user.id, artist.name, release)
+            );
+          }
+          currentPage++;
+        }
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res
+          .status(500)
+          .send(
+            "Server Error | We're experiencing issues retrieving data from Discogs."
+          );
+      });
+    if (currentArtistReleases.length !== updatedArtistReleases.length) {
+      artist.releases = updatedArtistReleases;
+      await artist.save();
+      res.json({ msg: 'Artist releases updated' });
+    } else {
+      res.json({ msg: 'No new artist releases' });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
