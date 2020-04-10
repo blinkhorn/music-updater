@@ -247,4 +247,45 @@ router.put('/releases/:id', auth, async (req, res) => {
   }
 });
 
+// @route    DELETE api/artists/release/:id/:release_id
+// @desc     Delete Artist release
+// @access   Private
+router.delete('/release/:id/:release_id', auth, async (req, res) => {
+  try {
+      const artist = await Artist.findById(req.params.id);
+
+      // pull out release
+      const release = artist.releases.find(
+          release => release.id === req.params.release_id
+      );
+
+      // make sure artist exists
+      if (!artist) {
+          return res.status(404).json({ msg: 'Artist does not exits' });
+      }
+      // make sure release exists
+      if (!release) {
+          return res.status(404).json({ msg: 'Release does not exits' });
+      }
+      // check user
+      if (release.user.toString() !== req.user.id) {
+          return res.status(401).json({ msg: 'User not authorized' });
+      }
+
+      // Get remove index
+      const removeIndex = artist.releases
+          .map(release => release.id)
+          .indexOf(req.params.release_id);
+
+      artist.releases.splice(removeIndex, 1);
+
+      await artist.save();
+
+      res.json(artist.releases);
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
