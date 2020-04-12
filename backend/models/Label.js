@@ -17,8 +17,7 @@ const LabelSchema = new Schema({
         ref: 'users'
       },
       releaseId: {
-        type: Number,
-        required: true
+        type: Number
       },
       resourceURL: {
         type: String

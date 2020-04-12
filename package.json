@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server",
     "server": "nodemon server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -26,10 +28,12 @@
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.5",
-    "mongoose": "^5.9.7"
+    "mongoose": "^5.9.7",
+    "react-router-dom": "^5.1.2"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
     "nodemon": "^2.0.2"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

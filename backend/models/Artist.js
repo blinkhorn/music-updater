@@ -21,8 +21,7 @@ const ArtistSchema = new Schema({
         required: true
       },
       releaseId: {
-        type: Number,
-        required: true
+        type: Number
       },
       resourceURL: {
         type: String
