@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateArtistReleases } from '../../actions/artist';
+import { updateLabelReleases } from '../../actions/label';
 
 // Material
 import Button from '@material-ui/core/Button';
@@ -11,18 +11,18 @@ import CardContent from '@material-ui/core/CardContent';
 // CSS
 import '../../App.css';
 
-const ArtistReleaseButton = ({ artistId, updateArtistReleases }) => {
+const LabelReleaseButton = ({ labelId, updateLabelReleases }) => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        updateArtistReleases(artistId);
+        updateLabelReleases(labelId);
     };
 
     return (
-        <Card className="artist-form-card">
+        <Card className="label-form-card">
             <CardContent>
                 <div>
-                    <h3>Click the button to update the artist releases!</h3>
+                    <h3>Click the button to update the label releases!</h3>
                 </div>
                 <form onSubmit={e => onSubmit(e)}>
                     <Button
@@ -39,11 +39,11 @@ const ArtistReleaseButton = ({ artistId, updateArtistReleases }) => {
     );
 };
 
-ArtistReleaseButton.propTypes = {
-    updateArtistReleases: PropTypes.func.isRequired
+LabelReleaseButton.propTypes = {
+    updateLabelReleases: PropTypes.func.isRequired
 };
 
 export default connect(
     null,
-    { updateArtistReleases }
-)(ArtistReleaseButton);
+    { updateLabelReleases }
+)(LabelReleaseButton);

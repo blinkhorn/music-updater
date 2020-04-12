@@ -35,9 +35,9 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
             <Button>
                 <Link className={classes.navButton} to="/artists">Artists</Link>
             </Button>
-            {/* <Button>
+            <Button>
                 <Link className={classes.navButton} to="/labels">Labels</Link>
-            </Button> */}
+            </Button>
             <Button>
                 <a className={classes.navButton} onClick={logout} href="#!">
                     Logout

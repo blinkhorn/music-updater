@@ -123,12 +123,16 @@ export const updateLabelReleases = (labelId) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/labels/releases/${labelId}`, config);
 
-    dispatch({
-      type: UPDATE_LABEL_RELEASES,
-      payload: res.data
-    });
+    if (res.data.msg === 'No new label releases') {
+      dispatch(setAlert('No New Label Releases'));
+    } else {
+      dispatch({
+        type: UPDATE_LABEL_RELEASES,
+        payload: res.data
+      });
 
-    dispatch(setAlert('Label Releases Updated'));
+      dispatch(setAlert('Label Releases Updated'));
+    }
   } catch (err) {
     dispatch({
       type: LABEL_ERROR,

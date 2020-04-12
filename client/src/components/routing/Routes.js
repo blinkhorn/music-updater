@@ -6,7 +6,8 @@ import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 import Artists from '../artists/Artists';
 import Artist from '../artist/Artist';
-// import artists and labels
+import Labels from '../labels/Labels';
+import Label from '../label/Label';
 import NotFound from '../layout/NotFound';
 import PrivateRoute from './PrivateRoute';
 
@@ -48,7 +49,7 @@ const Routes = () => {
                             path="/artists/:id"
                             component={Artist}
                         />
-                        {/* <PrivateRoute
+                        <PrivateRoute
                             exact
                             path="/labels"
                             component={Labels}
@@ -57,7 +58,7 @@ const Routes = () => {
                             exact
                             path="/labels/:id"
                             component={Label}
-                        /> */}
+                        />
                         <Route component={NotFound} />
                     </Switch>
                 </div>

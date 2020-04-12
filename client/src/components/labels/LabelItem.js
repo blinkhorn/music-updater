@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { deleteArtist } from '../../actions/artist';
+import { deleteLabel } from '../../actions/label';
 
 // Material
 import Button from '@material-ui/core/Button';
@@ -13,12 +13,12 @@ import CardContent from '@material-ui/core/CardContent';
 // CSS
 import '../../App.css';
 
-const ArtistItem = ({
-  deleteArtist,
-  artist: { _id, name, releases, date },
+const LabelItem = ({
+  deleteLabel,
+  label: { _id, name, releases, date },
   showActions
 }) => (
-  <Card className='artist-card'>
+  <Card className='label-card'>
     <CardContent>
       <h2>{name}</h2>
 
@@ -28,19 +28,19 @@ const ArtistItem = ({
 
       {showActions && (
         <Fragment>
-          <Link style={{ color: 'black' }} to={`/artists/${_id}`}>
-            Aritst Releases{' '}
+          <Link style={{ color: 'black' }} to={`/labels/${_id}`}>
+            Label Releases{' '}
             {releases.length > 0 && <span>{releases.length}</span>}
           </Link>
           <div>
             <Button
               variant='contained'
               color='secondary'
-              onClick={() => deleteArtist(_id)}
+              onClick={() => deleteLabel(_id)}
               style={{ marginTop: '1rem' }}
               type='button'
             >
-              Delete Artist
+              Delete Label
             </Button>
           </div>
         </Fragment>
@@ -49,14 +49,14 @@ const ArtistItem = ({
   </Card>
 );
 
-ArtistItem.defaultProps = {
+LabelItem.defaultProps = {
   showActions: true
 };
 
-ArtistItem.propTypes = {
-  artist: PropTypes.object.isRequired,
-  deleteArtist: PropTypes.func.isRequired,
+LabelItem.propTypes = {
+  label: PropTypes.object.isRequired,
+  deleteLabel: PropTypes.func.isRequired,
   showActions: PropTypes.bool
 };
 
-export default connect(null, { deleteArtist })(ArtistItem);
+export default connect(null, { deleteLabel })(LabelItem);
