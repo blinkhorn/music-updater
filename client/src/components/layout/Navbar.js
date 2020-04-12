@@ -32,10 +32,10 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
             <Button >
                 <Link className={classes.navButton} to="/dashboard">Dashboard</Link>
             </Button>
-            {/* <Button>
+            <Button>
                 <Link className={classes.navButton} to="/artists">Artists</Link>
             </Button>
-            <Button>
+            {/* <Button>
                 <Link className={classes.navButton} to="/labels">Labels</Link>
             </Button> */}
             <Button>

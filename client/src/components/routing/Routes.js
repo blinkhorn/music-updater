@@ -4,6 +4,8 @@ import Register from '../auth/Register';
 import Login from '../auth/Login';
 import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
+import Artists from '../artists/Artists';
+import Artist from '../artist/Artist';
 // import artists and labels
 import NotFound from '../layout/NotFound';
 import PrivateRoute from './PrivateRoute';
@@ -36,7 +38,7 @@ const Routes = () => {
                             path="/dashboard"
                             component={Dashboard}
                         />
-                        {/* <PrivateRoute
+                        <PrivateRoute
                             exact
                             path="/artists"
                             component={Artists}
@@ -46,7 +48,7 @@ const Routes = () => {
                             path="/artists/:id"
                             component={Artist}
                         />
-                        <PrivateRoute
+                        {/* <PrivateRoute
                             exact
                             path="/labels"
                             component={Labels}

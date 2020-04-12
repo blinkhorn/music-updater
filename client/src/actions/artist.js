@@ -122,13 +122,16 @@ export const updateArtistReleases = (artistId) => async (dispatch) => {
 
   try {
     const res = await axios.put(`/api/artists/releases/${artistId}`, config);
+    if (res.data.msg === 'No new artist releases') {
+      dispatch(setAlert('No New Artist Releases'));
+    } else {
+      dispatch({
+        type: UPDATE_ARTIST_RELEASES,
+        payload: res.data
+      });
 
-    dispatch({
-      type: UPDATE_ARTIST_RELEASES,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Artist Releases Updated'));
+      dispatch(setAlert('Artist Releases Updated'));
+    }
   } catch (err) {
     dispatch({
       type: ARTIST_ERROR,

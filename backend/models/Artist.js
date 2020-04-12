@@ -32,7 +32,7 @@ const ArtistSchema = new Schema({
       releaseTitle: {
         type: String
       },
-      releaseLabel: {
+      releaseLabels: {
         type: [String]
       },
       releaseType: {

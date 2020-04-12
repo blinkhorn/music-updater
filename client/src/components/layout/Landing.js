@@ -33,7 +33,7 @@ const Landing = ({ isAuthenticated }) => {
         <div className={classes.landingWrapper}>
           <h1>Music Updater | A Tool For Finding New Music</h1>
           <p>
-            Stay updated on your favorite artists' and record labels' releases!
+            Stay updated on your favorite artist and record label releases!
           </p>
           <div>
             <Button>

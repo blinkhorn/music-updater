@@ -33,7 +33,7 @@ const setArtistRelease = (user, artist, release) => {
     resourceURL: release.resource_url,
     thumbnailURL: release.thumb,
     releaseTitle: release.title,
-    releaseLabel: release.label,
+    releaseLabels: release.label,
     releaseType: release.type,
     releaseYear: release.year
   };
