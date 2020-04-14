@@ -5,6 +5,8 @@ import {
     DELETE_ARTIST,
     ADD_ARTIST,
     GET_ARTIST,
+    GET_CURRENT_ARTIST,
+    UPDATE_CURRENT_ARTIST,
     UPDATE_ARTIST_RELEASES,
     REMOVE_ARTIST_RELEASE
 } from '../actions/types';
@@ -12,6 +14,7 @@ import {
 const initialState = {
     artists: [],
     artist: null,
+    currentArtist: null,
     loading: true,
     error: {}
 };
@@ -31,6 +34,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 artist: payload,
+                loading: false
+            };
+        case GET_CURRENT_ARTIST:
+            return {
+                ...state,
+                currentArtist: payload,
                 loading: false
             };
         case ADD_ARTIST:
@@ -57,6 +66,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 artist: { ...state.artist, releases: payload },
+                loading: false
+            };
+        case UPDATE_CURRENT_ARTIST:
+            return {
+                ...state,
+                currentArtist: payload,
                 loading: false
             };
         case REMOVE_ARTIST_RELEASE:

@@ -7,6 +7,8 @@ import {
   DELETE_ARTIST,
   ADD_ARTIST,
   GET_ARTIST,
+  GET_CURRENT_ARTIST,
+  UPDATE_CURRENT_ARTIST,
   UPDATE_ARTIST_RELEASES,
   REMOVE_ARTIST_RELEASE
 } from './types';
@@ -102,6 +104,44 @@ export const getArtist = (id) => async (dispatch) => {
 
     dispatch({
       type: GET_ARTIST,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTIST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Update current artist
+export const updateCurrentArtist = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/artists/set/${id}`);
+    if (res.data.msg !== 'Current artist set') {
+      dispatch(setAlert(res.data.msg));
+    } else {
+      dispatch({
+        type: UPDATE_CURRENT_ARTIST,
+        payload: res.data
+      });
+      dispatch(setAlert('Current Artist Updated'));
+    }
+  } catch (err) {
+    dispatch({
+      type: ARTIST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// Get current artist
+export const getCurrentArtist = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/artists/current`);
+
+    dispatch({
+      type: GET_CURRENT_ARTIST,
       payload: res.data
     });
   } catch (err) {

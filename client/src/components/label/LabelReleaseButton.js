@@ -22,7 +22,7 @@ const LabelReleaseButton = ({ labelId, updateLabelReleases }) => {
         <Card className="label-form-card">
             <CardContent>
                 <div>
-                    <h3>Click the button to update the label releases!</h3>
+                    <h3>Update the label releases</h3>
                 </div>
                 <form onSubmit={e => onSubmit(e)}>
                     <Button
@@ -31,7 +31,7 @@ const LabelReleaseButton = ({ labelId, updateLabelReleases }) => {
                         style={{ marginTop: '1rem' }}
                         type="submit"
                     >
-                        Submit
+                        Update
                     </Button>
                 </form>
             </CardContent>

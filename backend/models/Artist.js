@@ -10,6 +10,10 @@ const ArtistSchema = new Schema({
     type: String,
     required: true
   },
+  currentArtist: {
+    type: Boolean,
+    default: false
+  },
   releases: [
     {
       user: {
@@ -43,7 +47,7 @@ const ArtistSchema = new Schema({
       },
       dateRetrieved: {
         type: Date,
-        defautlt: Date.now
+        default: Date.now
       }
     }
   ],

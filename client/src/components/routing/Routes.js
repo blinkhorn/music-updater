@@ -6,6 +6,7 @@ import Alert from '../layout/Alert';
 import Dashboard from '../dashboard/Dashboard';
 import Artists from '../artists/Artists';
 import Artist from '../artist/Artist';
+import ArtistPlaylist from '../artist/ArtistPlaylist';
 import Labels from '../labels/Labels';
 import Label from '../label/Label';
 import NotFound from '../layout/NotFound';
@@ -48,6 +49,11 @@ const Routes = () => {
                             exact
                             path="/artists/:id"
                             component={Artist}
+                        />
+                        <PrivateRoute
+                            exact
+                            path="/artist/playlist"
+                            component={ArtistPlaylist}
                         />
                         <PrivateRoute
                             exact

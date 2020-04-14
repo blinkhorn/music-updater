@@ -10,6 +10,10 @@ const LabelSchema = new Schema({
     type: String,
     required: true
   },
+  currentLabel: {
+    type: Boolean,
+    default: false
+  },
   releases: [
     {
       user: {
@@ -33,7 +37,7 @@ const LabelSchema = new Schema({
       },
       dateRetrieved: {
         type: Date,
-        defautlt: Date.now
+        default: Date.now
       }
     }
   ],

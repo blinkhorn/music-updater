@@ -131,6 +131,71 @@ router.get('/all', auth, async (req, res) => {
   }
 });
 
+// @route    GET api/artists/current
+// @desc     Get current user artist to create playlist with
+// @access   Private
+router.get('/current', auth, async (req, res) => {
+  try {
+    const currentUserArtists = await Artist.find({ user: req.user.id });
+
+    if (!currentUserArtists) {
+      return res.status(404).json({ msg: 'User does not have artists' });
+    }
+
+    const artist = currentUserArtists.find((el) => el.currentArtist === true);
+    if (artist === undefined) {
+      return res.status(404).json({ msg: 'User has not set a current artist' });
+    }
+
+    res.json(artist);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    PUT api/artists/set/:id
+// @desc     Update current user artist
+// @access   Private
+router.put('/set/:id', auth, async (req, res) => {
+  try {
+    // clear previous current artist for user
+
+    const currentUserArtists = await Artist.find({ user: req.user.id });
+
+    if (!currentUserArtists) {
+      return res.status(404).json({ msg: 'User does not have artists' });
+    }
+
+    const previousCurrentArtist = currentUserArtists.find(
+      (el) => el.currentArtist === true
+    );
+    if (previousCurrentArtist) {
+      previousCurrentArtist.currentArtist = false;
+      await previousCurrentArtist.save();
+    }
+
+    // set currentArtist for specified artist
+    const artist = await Artist.findById(req.params.id);
+
+    if (!artist) {
+      return res.status(404).json({ msg: 'Artist not found' });
+    }
+
+    // check user
+    if (artist.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    artist.currentArtist = true;
+    await artist.save();
+    res.json({ msg: 'Current artist set' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route    GET api/artists/:id
 // @desc     Get artist by ID
 // @access   Private
@@ -252,39 +317,39 @@ router.put('/releases/:id', auth, async (req, res) => {
 // @access   Private
 router.delete('/release/:id/:release_id', auth, async (req, res) => {
   try {
-      const artist = await Artist.findById(req.params.id);
+    const artist = await Artist.findById(req.params.id);
 
-      // pull out release
-      const release = artist.releases.find(
-          release => release.id === req.params.release_id
-      );
+    // pull out release
+    const release = artist.releases.find(
+      (release) => release.id === req.params.release_id
+    );
 
-      // make sure artist exists
-      if (!artist) {
-          return res.status(404).json({ msg: 'Artist does not exits' });
-      }
-      // make sure release exists
-      if (!release) {
-          return res.status(404).json({ msg: 'Release does not exits' });
-      }
-      // check user
-      if (release.user.toString() !== req.user.id) {
-          return res.status(401).json({ msg: 'User not authorized' });
-      }
+    // make sure artist exists
+    if (!artist) {
+      return res.status(404).json({ msg: 'Artist does not exits' });
+    }
+    // make sure release exists
+    if (!release) {
+      return res.status(404).json({ msg: 'Release does not exits' });
+    }
+    // check user
+    if (release.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
 
-      // Get remove index
-      const removeIndex = artist.releases
-          .map(release => release.id)
-          .indexOf(req.params.release_id);
+    // Get remove index
+    const removeIndex = artist.releases
+      .map((release) => release.id)
+      .indexOf(req.params.release_id);
 
-      artist.releases.splice(removeIndex, 1);
+    artist.releases.splice(removeIndex, 1);
 
-      await artist.save();
+    await artist.save();
 
-      res.json(artist.releases);
+    res.json(artist.releases);
   } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Server Error');
+    console.error(error.message);
+    res.status(500).send('Server Error');
   }
 });
 

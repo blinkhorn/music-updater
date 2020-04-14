@@ -12,38 +12,35 @@ import CardContent from '@material-ui/core/CardContent';
 import '../../App.css';
 
 const ArtistReleaseButton = ({ artistId, updateArtistReleases }) => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    updateArtistReleases(artistId);
+  };
 
-    const onSubmit = async e => {
-        e.preventDefault();
-        updateArtistReleases(artistId);
-    };
-
-    return (
-        <Card className="artist-form-card">
-            <CardContent>
-                <div>
-                    <h3>Click the button to update the artist releases!</h3>
-                </div>
-                <form onSubmit={e => onSubmit(e)}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ marginTop: '1rem' }}
-                        type="submit"
-                    >
-                        Submit
-                    </Button>
-                </form>
-            </CardContent>
-        </Card>
-    );
+  return (
+    <Card className='artist-form-card'>
+      <CardContent>
+        <div>
+          <h3>Update the artist releases</h3>
+        </div>
+        <form onSubmit={(e) => onSubmit(e)}>
+          <Button
+            variant='contained'
+            color='primary'
+            style={{ marginTop: '1rem' }}
+            type='submit'
+          >
+            Update
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
 };
 
 ArtistReleaseButton.propTypes = {
-    updateArtistReleases: PropTypes.func.isRequired
+  artistId: PropTypes.string.isRequired,
+  updateArtistReleases: PropTypes.func.isRequired
 };
 
-export default connect(
-    null,
-    { updateArtistReleases }
-)(ArtistReleaseButton);
+export default connect(null, { updateArtistReleases })(ArtistReleaseButton);
