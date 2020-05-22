@@ -9,6 +9,7 @@ import { getLabel } from '../../actions/label';
 
 // Material
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 // CSS
 import '../../App.css';
@@ -30,19 +31,27 @@ const Label = ({ getLabel, label: { label, loading }, match }) => {
       <div className='label-container'>
         <LabelItem label={label} showActions={false} />
         <LabelReleaseButton labelId={label._id} />
-        <div style={{ marginTop: '4rem' }}>
+        <Grid
+          container
+          direction='row'
+          justify='center'
+          alignItems='center'
+          spacing={3}
+        >
           {label.releases.length === 0 ? (
             <div />
           ) : (
             label.releases.map((release) => (
-              <LabelReleaseItem
-                key={release._id}
-                release={release}
-                labelId={label._id}
-              />
+              <Grid key={release._id} item>
+                <LabelReleaseItem
+                  key={release._id}
+                  release={release}
+                  labelId={label._id}
+                />
+              </Grid>
             ))
           )}
-        </div>
+        </Grid>
       </div>
     </Fragment>
   );

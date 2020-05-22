@@ -19,7 +19,7 @@ const LabelReleaseButton = ({ labelId, updateLabelReleases }) => {
     };
 
     return (
-        <Card className="label-form-card">
+        <Card className="label-form-card" style={{ marginBottom: '4rem' }}>
             <CardContent>
                 <div>
                     <h3>Update the label releases</h3>

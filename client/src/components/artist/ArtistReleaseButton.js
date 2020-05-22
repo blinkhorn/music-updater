@@ -18,7 +18,7 @@ const ArtistReleaseButton = ({ artistId, updateArtistReleases }) => {
   };
 
   return (
-    <Card className='artist-form-card'>
+    <Card className='artist-form-card' style={{ marginBottom: '4rem' }}>
       <CardContent>
         <div>
           <h3>Update the artist releases</h3>

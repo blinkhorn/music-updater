@@ -1,12 +1,15 @@
-import React, { Fragment, useEffect } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import LabelItem from "./LabelItem";
-import LabelForm from "./LabelForm";
-import { getCurrentUserLabels } from "../../actions/label";
+import React, { Fragment, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import LabelItem from './LabelItem';
+import LabelForm from './LabelForm';
+import { getCurrentUserLabels } from '../../actions/label';
+
+// Material
+import Grid from '@material-ui/core/Grid';
 
 // CSS
-import "../../App.css";
+import '../../App.css';
 
 const Labels = ({ getCurrentUserLabels, auth, label: { labels, loading } }) => {
   useEffect(() => {
@@ -19,13 +22,23 @@ const Labels = ({ getCurrentUserLabels, auth, label: { labels, loading } }) => {
     <Fragment>
       <h1>Labels</h1>
       <p>Welcome to Music Updater!</p>
-      <div className="label-container">
+      <div className='label-container'>
         <LabelForm />
-        {labels
-          .filter(label => !auth.loading && label.user === auth.user._id)
-          .map(label => (
-            <LabelItem key={label._id} label={label} />
-          ))}
+        <Grid
+          container
+          direction='row'
+          justify='center'
+          alignItems='center'
+          spacing={3}
+        >
+          {labels
+            .filter((label) => !auth.loading && label.user === auth.user._id)
+            .map((label) => (
+              <Grid key={label._id} item>
+                <LabelItem key={label._id} label={label} />
+              </Grid>
+            ))}
+        </Grid>
       </div>
     </Fragment>
   );
@@ -37,7 +50,7 @@ Labels.propTypes = {
   label: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   label: state.label,
   auth: state.auth
 });

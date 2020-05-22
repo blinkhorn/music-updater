@@ -9,6 +9,7 @@ import { getArtist } from '../../actions/artist';
 
 // Material
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 // CSS
 import '../../App.css';
@@ -30,19 +31,27 @@ const Artist = ({ getArtist, artist: { artist, loading }, match }) => {
       <div className='artist-container'>
         <ArtistItem artist={artist} showActions={false} />
         <ArtistReleaseButton artistId={artist._id} />
-        <div style={{ marginTop: '4rem' }}>
+        <Grid
+          container
+          direction='row'
+          justify='center'
+          alignItems='center'
+          spacing={3}
+        >
           {artist.releases.length === 0 ? (
             <div />
           ) : (
             artist.releases.map((release) => (
-              <ArtistReleaseItem
-                key={release._id}
-                release={release}
-                artistId={artist._id}
-              />
+              <Grid key={release._id} item>
+                <ArtistReleaseItem
+                  key={release._id}
+                  release={release}
+                  artistId={artist._id}
+                />
+              </Grid>
             ))
           )}
-        </div>
+        </Grid>
       </div>
     </Fragment>
   );

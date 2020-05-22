@@ -42,12 +42,12 @@ transform: rotateY(180deg);
 }
 
 
-.artist-card, .artist-form-card {
+.artist-card, .artist-form-card, .label-card, .label-form-card {
   margin-top: 2rem;
   width: 20rem;
 }
 
-.artist-container {
+.artist-container, .label-container {
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
