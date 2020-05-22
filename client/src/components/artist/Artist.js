@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ArtistItem from '../artists/ArtistItem';
 import ArtistReleaseButton from './ArtistReleaseButton';
-import ArtistPlaylistButton from './ArtistPlaylistButton';
 import ArtistReleaseItem from './ArtistReleaseItem';
 import { getArtist } from '../../actions/artist';
 
@@ -31,7 +30,6 @@ const Artist = ({ getArtist, artist: { artist, loading }, match }) => {
       <div className='artist-container'>
         <ArtistItem artist={artist} showActions={false} />
         <ArtistReleaseButton artistId={artist._id} />
-        <ArtistPlaylistButton artistId={artist._id} />
         <div style={{ marginTop: '4rem' }}>
           {artist.releases.length === 0 ? (
             <div />

@@ -131,29 +131,6 @@ router.get('/all', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/artists/current
-// @desc     Get current user artist to create playlist with
-// @access   Private
-router.get('/current', auth, async (req, res) => {
-  try {
-    const currentUserArtists = await Artist.find({ user: req.user.id });
-
-    if (!currentUserArtists) {
-      return res.status(404).json({ msg: 'User does not have artists' });
-    }
-
-    const artist = currentUserArtists.find((el) => el.currentArtist === true);
-    if (artist === undefined) {
-      return res.status(404).json({ msg: 'User has not set a current artist' });
-    }
-
-    res.json(artist);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error');
-  }
-});
-
 // @route    PUT api/artists/set/:id
 // @desc     Update current user artist
 // @access   Private
