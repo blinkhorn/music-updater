@@ -31,7 +31,7 @@ const Landing = ({ isAuthenticated }) => {
       <CssBaseline />
       <Container maxWidth='lg'>
         <div className={classes.landingWrapper}>
-          <h1>Music Updater | A Tool For Finding New Music</h1>
+          <h1>Music Updater (MU) | A Tool For Finding New Music</h1>
           <p>
             Stay updated on your favorite artist and record label releases!
           </p>

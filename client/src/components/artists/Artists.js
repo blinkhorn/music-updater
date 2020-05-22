@@ -25,7 +25,7 @@ const Artists = ({
   ) : (
     <Fragment>
       <h1>Artists</h1>
-      <p>Welcome to Music Updater!</p>
+      <p>Welcome to Music Updater (MU)!</p>
       <div className='artist-container'>
         <ArtistForm />
         <Grid

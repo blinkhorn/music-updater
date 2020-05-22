@@ -21,7 +21,7 @@ const Labels = ({ getCurrentUserLabels, auth, label: { labels, loading } }) => {
   ) : (
     <Fragment>
       <h1>Labels</h1>
-      <p>Welcome to Music Updater!</p>
+      <p>Welcome to Music Updater (MU)!</p>
       <div className='label-container'>
         <LabelForm />
         <Grid
